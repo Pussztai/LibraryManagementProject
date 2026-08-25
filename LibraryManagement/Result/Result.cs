@@ -36,7 +36,9 @@
         public static Result<T> NotFound() => new(false, default, []);
         public static Result<T> BadRequest() => new(false, default, []);
 
-    }
+    
+
+
 
     public Result<K> Map<K>(Func<T, K> map)
         => IsSuccess ? Result<K>.Success(map(Value!)) : Result<K>.Failure(Errors);
