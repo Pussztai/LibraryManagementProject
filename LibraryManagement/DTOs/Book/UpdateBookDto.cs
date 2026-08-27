@@ -8,7 +8,7 @@ namespace LibraryManagement.DTOs.Book {
 
         [Required]
         [StringLength(4)]
-        public string PublishedYear { get; set; } = string.Empty;
+        public int PublishedYear { get; set; }
 
         [Required]
         public int TotalCopies { get; set; }

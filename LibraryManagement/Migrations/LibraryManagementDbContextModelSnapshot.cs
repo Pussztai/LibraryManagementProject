@@ -60,8 +60,8 @@ namespace LibraryManagement.Migrations
                     b.Property<int>("AvalaibleCopies")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PublishedYear")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("PublishedYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()

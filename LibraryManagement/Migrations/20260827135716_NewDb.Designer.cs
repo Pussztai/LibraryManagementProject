@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    [Migration("20260825130451_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260827135716_NewDb")]
+    partial class NewDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,8 +63,8 @@ namespace LibraryManagement.Migrations
                     b.Property<int>("AvalaibleCopies")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PublishedYear")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("PublishedYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
