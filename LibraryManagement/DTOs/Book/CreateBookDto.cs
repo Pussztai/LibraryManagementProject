@@ -10,7 +10,6 @@ namespace LibraryManagement.DTOs.Book {
         public int AuthorId { get; set; }
 
         [Required]
-        [StringLength(4)]
         public int PublishedYear { get; set; }
 
         [Required]

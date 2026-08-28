@@ -1,6 +1,36 @@
-@LibraryManagement_HostAddress = http://localhost:5262
+@LibraryManagement_HostAddress = https://localhost:7180
 
-GET {{LibraryManagement_HostAddress}}/weatherforecast/
-Accept: application/json
+
+
+GET {{LibraryManagement_HostAddress}}/api/books
+
+###
+
+POST {{LibraryManagement_HostAddress}}/api/books
+Content-Type: application/json
+
+{
+  "Title":"Bambi",
+  "PublishedYear": 1999,
+  "TotalCopies":68
+}
+
+###
+
+@id=0
+DELETE {{LibraryManagement_HostAddress}}/api/books/{{id}}
+
+###
+
+GET {{LibraryManagement_HostAddress}}/api/books/{{id}}
+
+###
+
+PUT {{LibraryManagement_HostAddress}}/api/books/{{id}}
+Content-Type: application/json
+
+{
+  //UpdateBookDto
+}
 
 ###

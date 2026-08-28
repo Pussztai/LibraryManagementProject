@@ -1,4 +1,4 @@
-﻿using LibraryManagement.Contracts;
+﻿using LibraryManagement.Constants;
 using LibraryManagement.Data;
 using LibraryManagement.DTOs.Book;
 using LibraryManagement.Entities;
@@ -72,14 +72,14 @@ namespace LibraryManagement.Services {
             return Result<BookResponseDto>.Success(response);
         }
 
-        public async Task<Result<BookResponseDto>> UpdateAsync(int id, UpdateBookDto dto) {
+        public async Task<Result> UpdateAsync(int id, UpdateBookDto dto) {
             var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book is null) {
-                return Result<BookResponseDto>.NotFound(new Error("NotFound", "The book is not found"));
+                return Result.NotFound(new Error("NotFound", "The book is not found"));
             }
             var BorrowedCopies = book.TotalCopies - book.AvalaibleCopies;
             if (dto.TotalCopies < BorrowedCopies) {
-                return Result<BookResponseDto>.Failure();
+                return Result.Failure();
             }
 
             book.AvalaibleCopies = dto.TotalCopies - book.TotalCopies;
@@ -87,14 +87,8 @@ namespace LibraryManagement.Services {
             book.PublishedYear = dto.PublishedYear;
             book.TotalCopies = dto.TotalCopies;
             await context.SaveChangesAsync();
-            var response = new BookResponseDto(
-                book.Id,
-                book.Title,
-                $"{book.Author?.FirstName} {book.Author?.LastName}",
-                book.PublishedYear,
-                book.AvalaibleCopies
-            );
-            return Result<BookResponseDto>.Success(response);
+
+            return Result.Success();
         }
 
         public async Task<Result> DeleteAsync(int id) {
