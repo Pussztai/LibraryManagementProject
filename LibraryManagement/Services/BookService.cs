@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Data;
+﻿using LibraryManagement.Contracts;
+using LibraryManagement.Data;
 using LibraryManagement.DTOs.Book;
 using LibraryManagement.Entities;
 using LibraryManagement.Results;
@@ -6,7 +7,7 @@ using LibraryManagement.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Services {
-    public class BookService(LibraryManagementDbContext context) {
+    public class BookService(LibraryManagementDbContext context) : IBookService {
         public async Task<Result<BookResponseDto>> GetByIdAsync(int id) {
             try {
                 var book = await context.Books
@@ -44,10 +45,10 @@ namespace LibraryManagement.Services {
             var isHaveAuthor = await context.Authors.AnyAsync(a => a.Id == dto.AuthorId);
 
             if (!isHaveAuthor) {
-                return Result<BookResponseDto>.Failure();
+                return Result<BookResponseDto>.Failure(new Error("NotFound", "The author is not found"));
             }
 
-            
+
 
             var newBook = new Book {
                 Title = dto.Title,
@@ -74,12 +75,14 @@ namespace LibraryManagement.Services {
         public async Task<Result<BookResponseDto>> UpdateAsync(int id, UpdateBookDto dto) {
             var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book is null) {
-                return Result<BookResponseDto>.NotFound();
+                return Result<BookResponseDto>.NotFound(new Error("NotFound", "The book is not found"));
             }
             var BorrowedCopies = book.TotalCopies - book.AvalaibleCopies;
             if (dto.TotalCopies < BorrowedCopies) {
                 return Result<BookResponseDto>.Failure();
             }
+
+            book.AvalaibleCopies = dto.TotalCopies - book.TotalCopies;
             book.Title = dto.Title;
             book.PublishedYear = dto.PublishedYear;
             book.TotalCopies = dto.TotalCopies;
@@ -97,10 +100,13 @@ namespace LibraryManagement.Services {
         public async Task<Result> DeleteAsync(int id) {
             var book = await context.Books.FindAsync(id);
 
-            if(await context.Loans.AnyAsync(x=> x.BookId == id && x.ReturnedAt == null))
             if (book is null) {
                 return Result.Failure(new Error("Not Found", "Book was not found."));
             }
+            if (await context.Loans.AnyAsync(x => x.BookId == id && x.ReturnedAt == null)) {
+                return Result.Failure(new Error("Conflict", "The book has not been returned"));
+            }
+
 
             context.Books.Remove(book);
             await context.SaveChangesAsync();

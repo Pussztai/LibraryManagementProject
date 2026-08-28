@@ -1,5 +1,7 @@
 
+using LibraryManagement.Contracts;
 using LibraryManagement.Data;
+using LibraryManagement.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement
@@ -14,6 +16,7 @@ namespace LibraryManagement
             builder.Services.AddDbContext<LibraryManagementDbContext>(options => options.UseSqlServer(connectionstring));
 
             // Add services to the container.
+            builder.Services.AddScoped<IBookService, BookService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
