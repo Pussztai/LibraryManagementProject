@@ -48,8 +48,6 @@ namespace LibraryManagement.Services {
                 return Result<BookResponseDto>.Failure(new Error("NotFound", "The author is not found"));
             }
 
-
-
             var newBook = new Book {
                 Title = dto.Title,
                 AuthorId = dto.AuthorId,
