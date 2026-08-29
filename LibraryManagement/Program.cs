@@ -1,5 +1,6 @@
 
 using LibraryManagement.Constants;
+using LibraryManagement.Contracts;
 using LibraryManagement.Data;
 using LibraryManagement.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace LibraryManagement
 
             // Add services to the container.
             builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
