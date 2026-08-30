@@ -17,7 +17,7 @@ namespace LibraryManagement.Services {
                 .FirstOrDefaultAsync();
 
             return author is null
-                ? Result<AuthorResponseDto>.Failure(new Error("Not Found", $"Author with {id} not found"))
+                ? Result<AuthorResponseDto>.Failure(new Error(ErrorCodes.NotFound, $"Author with {id} not found"))
                 : Result<AuthorResponseDto>.Success(author);
 
 
