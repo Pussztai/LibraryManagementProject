@@ -14,7 +14,8 @@ namespace LibraryManagement
             var builder = WebApplication.CreateBuilder(args);
 
             var connectionstring = builder.Configuration.GetConnectionString("LibraryManagementDbConnectionString");
-            builder.Services.AddDbContext<LibraryManagementDbContext>(options => options.UseSqlServer(connectionstring));
+            builder.Services.AddDbContext<LibraryManagementDbContext>(options =>options.UseSqlServer(connectionstring)
+);
 
             // Add services to the container.
             builder.Services.AddScoped<IBookService, BookService>();

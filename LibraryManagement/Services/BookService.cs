@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LibraryManagement.Services {
     public class BookService(LibraryManagementDbContext context) : IBookService {
         public async Task<Result<BookResponseDto>> GetByIdAsync(int id) {
-            try {
+            
                 var book = await context.Books
                     .Where(b => b.Id == id)
                     .Select(h => new BookResponseDto(
@@ -22,11 +22,9 @@ namespace LibraryManagement.Services {
                     .FirstOrDefaultAsync();
 
                 return book is null
-                    ? Result<BookResponseDto>.Failure(new Error("Not Found", "Country was not found."))
+                    ? Result<BookResponseDto>.Failure(new Error(ErrorCodes.NotFound, "Book was not found."))
                     : Result<BookResponseDto>.Success(book);
-            } catch (Exception) {
-                return Result<BookResponseDto>.Failure();
-            }
+            
         }
 
         public async Task<Result<IEnumerable<BookResponseDto>>> GetAllAsync() {
@@ -45,7 +43,7 @@ namespace LibraryManagement.Services {
             var isHaveAuthor = await context.Authors.AnyAsync(a => a.Id == dto.AuthorId);
 
             if (!isHaveAuthor) {
-                return Result<BookResponseDto>.Failure(new Error("NotFound", "The author is not found"));
+                return Result<BookResponseDto>.Failure(new Error(ErrorCodes.NotFound, "The author is not found"));
             }
 
             var newBook = new Book {
@@ -73,7 +71,7 @@ namespace LibraryManagement.Services {
         public async Task<Result> UpdateAsync(int id, UpdateBookDto dto) {
             var book = await context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book is null) {
-                return Result.NotFound(new Error("NotFound", "The book is not found"));
+                return Result.NotFound(new Error(ErrorCodes.NotFound, "The book is not found"));
             }
             var BorrowedCopies = book.TotalCopies - book.AvalaibleCopies;
             if (dto.TotalCopies < BorrowedCopies) {
@@ -93,10 +91,10 @@ namespace LibraryManagement.Services {
             var book = await context.Books.FindAsync(id);
 
             if (book is null) {
-                return Result.Failure(new Error("Not Found", "Book was not found."));
+                return Result.Failure(new Error(ErrorCodes.NotFound, "Book was not found."));
             }
             if (await context.Loans.AnyAsync(x => x.BookId == id && x.ReturnedAt == null)) {
-                return Result.Failure(new Error("Conflict", "The book has not been returned"));
+                return Result.Failure(new Error(ErrorCodes.NotFound, "The book has not been returned"));
             }
 
 

@@ -19,6 +19,8 @@ namespace LibraryManagement.Services {
             return author is null
                 ? Result<AuthorResponseDto>.Failure(new Error("Not Found", $"Author with {id} not found"))
                 : Result<AuthorResponseDto>.Success(author);
+
+
         }
 
         public async Task<Result<IEnumerable<AuthorResponseDto>>> GetAllAsync() {
@@ -35,7 +37,7 @@ namespace LibraryManagement.Services {
             var exist = await IsAuthorExitsNameAsync(dto.FirstName + " " + dto.LastName);
 
             if (exist) {
-                return Result<AuthorResponseDto>.Failure(new Error(ErrorCodes.Conflict, $"Country with name '{dto.FirstName + " " + dto.LastName}' already exists."));
+                return Result<AuthorResponseDto>.Failure(new Error(ErrorCodes.Conflict, $"Author with name '{dto.FirstName + " " + dto.LastName}' already exists."));
             }
 
             var newAuthor = new Author {

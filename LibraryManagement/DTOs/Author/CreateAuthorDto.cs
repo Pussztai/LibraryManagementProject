@@ -3,7 +3,7 @@
 namespace LibraryManagement.DTOs.Author {
     public class CreateAuthorDto {
         [Required]
-        [StringLength(50, MinimumLength = 2)]
+        [StringLength(50)]
         public string FirstName { get; set; } = string.Empty;
 
         [Required]

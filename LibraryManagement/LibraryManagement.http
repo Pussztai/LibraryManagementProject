@@ -11,17 +11,18 @@ Content-Type: application/json
 
 {
   "Title":"Bambi",
+  "AuthorId":4,
   "PublishedYear": 1999,
   "TotalCopies":68
 }
 
 ###
 
-@id=0
+# @id=5
 DELETE {{LibraryManagement_HostAddress}}/api/books/{{id}}
 
 ###
-
+@id=5
 GET {{LibraryManagement_HostAddress}}/api/books/{{id}}
 
 ###
@@ -30,7 +31,47 @@ PUT {{LibraryManagement_HostAddress}}/api/books/{{id}}
 Content-Type: application/json
 
 {
-  //UpdateBookDto
+  "Title":"Bambi2",
+  "PublishedYear":1950,
+  "TotalCopies":6787777
+}
+
+###
+
+# Author part
+
+GET {{LibraryManagement_HostAddress}}/api/authors
+
+###
+
+POST {{LibraryManagement_HostAddress}}/api/authors
+Content-Type: application/json
+
+{
+  "FirstName":"Kiss",
+  "LastName":"Erik",
+  "BirthYear":2000
+}
+
+###
+
+# @id=3
+DELETE {{LibraryManagement_HostAddress}}/api/authors/{{id}}
+
+###
+# @id=4
+GET {{LibraryManagement_HostAddress}}/api/authors/{{id}}
+
+###
+
+# @id=4
+PUT {{LibraryManagement_HostAddress}}/api/authors/{{id}}
+Content-Type: application/json
+
+{
+  "FirstName":"Kiss",
+  "LastName":"Erik",
+  "BirthYear":1967
 }
 
 ###

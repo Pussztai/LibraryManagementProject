@@ -7,7 +7,6 @@ namespace LibraryManagement.DTOs.Book {
         public string Title { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(4)]
         public int PublishedYear { get; set; }
 
         [Required]
