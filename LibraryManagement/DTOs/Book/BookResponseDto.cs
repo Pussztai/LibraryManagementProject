@@ -5,7 +5,6 @@
     string AuthorName,
     int PublishedYear,
     int AvailableCopies
-
         );
     
 }
