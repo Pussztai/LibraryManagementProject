@@ -38,9 +38,7 @@ namespace LibraryManagement.Services {
             await context.SaveChangesAsync();
             
 
-            var loanBook = await context.Books.FindAsync(NewLoan.BookId);
-            var loanMember = await context.Members.FindAsync(NewLoan.MemberId);
-
+            
             var response = new LoanResponseDto(
                 NewLoan.Id,
                 book.Id,
@@ -54,23 +52,44 @@ namespace LibraryManagement.Services {
             return Result<LoanResponseDto>.Success(response);
         }
 
-        public async Task<Result<List<LoanResponseDto>>> GetByMemberIdAsync(int memberId) {
-            var loans = await context.Loans
-                .Where(l => l.MemberId == memberId)
-                .ToListAsync();
+        public async Task<Result> ReturnAsync(int loanId) {
+            var loan = await context.Loans
+                .Include(l => l.Book)
+                .FirstOrDefaultAsync(l => l.Id == loanId);
 
-            var response = loans.Select(l => new LoanResponseDto(
-                l.Id,
-                l.BookId,
-                l.Book.Title,
-                l.MemberId,
-                l.Member.Name,
-                l.BorrowedAt,
-                l.ReturnedAt
-            )).ToList();
+            if (loan is null) {
+                return Result.NotFound(new Error(ErrorCodes.NotFound, "The loan is not found"));
+            }
+
+            if (loan.ReturnedAt != null) {
+                return Result.Failure(new Error(ErrorCodes.Conflict, "The book has already been returned"));
+            }
+
+            loan.ReturnedAt = DateTime.UtcNow;
+            loan.Book.AvalaibleCopies += 1;
+
+            await context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result<List<LoanResponseDto>>> GetByMemberIdAsync(int memberId) {
+            var response = await context.Loans
+                .Where(l => l.MemberId == memberId)
+                .Select(l => new LoanResponseDto(
+                    l.Id,
+                    l.BookId,
+                    l.Book.Title,
+                    l.MemberId,
+                    l.Member.Name,
+                    l.BorrowedAt,
+                    l.ReturnedAt
+                ))
+                .ToListAsync();
 
             return Result<List<LoanResponseDto>>.Success(response);
         }
-
     }
+
 }
+
