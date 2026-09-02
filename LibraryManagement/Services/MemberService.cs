@@ -34,8 +34,6 @@ namespace LibraryManagement.Services {
             return Result<List<MemberResponseDto>>.Success(Member);
         }
 
-        //public async Task<Result<MemberResponseDto>> CreateAsync(CreateMemberDto dto) {
-
-        //}
+        
     }
 }
