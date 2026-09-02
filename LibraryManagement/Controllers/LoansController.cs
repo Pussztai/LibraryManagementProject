@@ -10,9 +10,6 @@ using LibraryManagement.DTOs.Loan;
 [ApiController]
 public class LoansController(ILoanService loanService) : BaseApiController
 {
-    
-
-   
 
     // GET: api/Loan/5
     [HttpGet("{id}")]
