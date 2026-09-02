@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using LibraryManagement.Constants;
+using LibraryManagement.Contracts;
 using LibraryManagement.Data;
 using LibraryManagement.DTOs.Loan;
 using LibraryManagement.Entities;
@@ -7,15 +8,15 @@ using LibraryManagement.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Services {
-    public class LoanService(LibraryManagementDbContext context) {
+    public class LoanService(LibraryManagementDbContext context) : ILoanService {
         public async Task<Result<LoanResponseDto>> CreateAsync(CreateLoanDto dto) {
             var book = await context.Books.FirstOrDefaultAsync(b => b.Id == dto.BookId);
-            if(book is null) {
-                return Result<LoanResponseDto>.Failure(new Error(ErrorCodes.NotFound,"The book is not found with id: " + dto.BookId));
+            if (book is null) {
+                return Result<LoanResponseDto>.Failure(new Error(ErrorCodes.NotFound, "The book is not found with id: " + dto.BookId));
             }
             var member = await context.Members.FirstOrDefaultAsync(m => m.Id == dto.MemberId);
 
-            if(member is null) {
+            if (member is null) {
                 return Result<LoanResponseDto>.Failure(new Error(ErrorCodes.NotFound, "Member is not found with id: " + dto.MemberId));
 
             }
@@ -36,9 +37,9 @@ namespace LibraryManagement.Services {
             book.AvalaibleCopies -= 1;
             await context.AddAsync(NewLoan);
             await context.SaveChangesAsync();
-            
 
-            
+
+
             var response = new LoanResponseDto(
                 NewLoan.Id,
                 book.Id,
